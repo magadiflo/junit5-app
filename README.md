@@ -41,3 +41,14 @@ Opción 2
 ```
 Control + shift + F10
 ```
+
+NOTA: 
+- Si esas opciones se ejecutan sobre un método 
+en específico, solo se ejecutará el test de dicho método,
+en caso el cursor esté posicionado en el nombre de la clase o un area
+que no sea un método ejecutará todas las pruebas
+- La ejecución del orden de las pruebas no es secuencial, es decir
+puede que se ejecute primero el método A y luego el método B, o en otro caso
+primero el método B y luego el método A, eso depende del motor de pruebas de 
+JUnit, y eso está bien, ya que al ser pruebas unitarias se, nos centramos únicamente
+en probar el método, y este no debería tener relación con otros métodos
