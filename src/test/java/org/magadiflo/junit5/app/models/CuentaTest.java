@@ -1,8 +1,6 @@
 package org.magadiflo.junit5.app.models;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.magadiflo.junit5.app.exceptions.DineroInsuficienteException;
 
 import java.math.BigDecimal;
@@ -20,6 +18,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CuentaTest {
 
+    Cuenta cuenta;
+
+    @BeforeEach //Que se ejecute antes de iniciar cada método test
+    void initMetodoTest() {
+        this.cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
+        System.out.println("Iniciando el método!");
+    }
+
+    @AfterEach //Que se ejecute después que finalice la ejecución de cada método test
+    void tearDown() {
+        System.out.println("Finalizando método de prueba");
+    }
+
     /**
      * Cuando usamos expresiones lambda para mostrar el mensaje de error de los assertions,
      * esta solo se va a ejecutar solo si el assertion falla. Mientras que, si se
@@ -34,10 +45,10 @@ class CuentaTest {
     @Test
     @DisplayName(value = "Probando nombre de la cuenta corriente!")
     void testNombreCuenta() {
-        Cuenta cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
+        //Cuenta cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
 
         String esperado = "Martín";
-        String real = cuenta.getPersona();
+        String real = this.cuenta.getPersona();
 
         assertNotNull(real, () -> "La cuenta no puede ser nula");
         assertEquals(esperado, real, () -> String.format("El nombre de la cuenta no es el que se esperaba. Se esperaba %s pero se obtuvo %s", esperado, real));
@@ -47,12 +58,12 @@ class CuentaTest {
     @Test
     @DisplayName(value = "Probando saldo de la cuenta corriente")
     void testSaldoCuenta() {
-        Cuenta cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
+        //Cuenta cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
 
-        assertNotNull(cuenta.getSaldo());
-        assertEquals(1000.12345d, cuenta.getSaldo().doubleValue());
-        assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0); //compareTo: -1, 0, 1
-        assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0); //compareTo: -1, 0, 1
+        assertNotNull(this.cuenta.getSaldo());
+        assertEquals(1000.12345d, this.cuenta.getSaldo().doubleValue());
+        assertFalse(this.cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0); //compareTo: -1, 0, 1
+        assertTrue(this.cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0); //compareTo: -1, 0, 1
     }
 
     @Test
@@ -67,31 +78,31 @@ class CuentaTest {
 
     @Test
     void testDebitoCuenta() { //Débito, restará el monto proporcionado a nuestro saldo
-        Cuenta cuenta = new Cuenta("Gaspar", new BigDecimal("1000.00"));
-        cuenta.debito(new BigDecimal("100"));
+        this.cuenta = new Cuenta("Gaspar", new BigDecimal("1000.00"));
+        this.cuenta.debito(new BigDecimal("100"));
 
-        assertNotNull(cuenta.getSaldo());
-        assertEquals(900, cuenta.getSaldo().intValue());
-        assertEquals("900.00", cuenta.getSaldo().toPlainString());
+        assertNotNull(this.cuenta.getSaldo());
+        assertEquals(900, this.cuenta.getSaldo().intValue());
+        assertEquals("900.00", this.cuenta.getSaldo().toPlainString());
     }
 
     @Test
     void testCreditoCuenta() { //Crédito, sumará el monto proporcionado a nuestro saldo
-        Cuenta cuenta = new Cuenta("Gaspar", new BigDecimal("1000.00"));
-        cuenta.credito(new BigDecimal("100"));
+        this.cuenta = new Cuenta("Gaspar", new BigDecimal("1000.00"));
+        this.cuenta.credito(new BigDecimal("100"));
 
-        assertNotNull(cuenta.getSaldo());
-        assertEquals(1100, cuenta.getSaldo().intValue());
-        assertEquals("1100.00", cuenta.getSaldo().toPlainString());
+        assertNotNull(this.cuenta.getSaldo());
+        assertEquals(1100, this.cuenta.getSaldo().intValue());
+        assertEquals("1100.00", this.cuenta.getSaldo().toPlainString());
     }
 
     @Test
     void testDineroInsuficienteExceptionCuenta() {
-        Cuenta cuenta = new Cuenta("Alicia", new BigDecimal("1000.00"));
+        this.cuenta = new Cuenta("Alicia", new BigDecimal("1000.00"));
 
         //Para los manejos de excepciones los haremos con expresiones Lambda (función de flecha)
         Exception exception = assertThrows(DineroInsuficienteException.class, () -> {
-            cuenta.debito(new BigDecimal("1500"));
+            this.cuenta.debito(new BigDecimal("1500"));
         });
 
         String mensajeActual = exception.getMessage();
@@ -129,10 +140,10 @@ class CuentaTest {
      * ese que falla, es que quiero saltarme esa prueba para ver la ejecución de las demás
      */
     @Test
-    @Disabled
+    //@Disabled
     @DisplayName(value = "Probando relaciones entre las cuentas y el banco con assertAll")
     void testRelacionBancoCuentas() {
-        fail();
+        //fail();
 
         Cuenta cuentaOrigen = new Cuenta("Alicia", new BigDecimal("2500"));
         Cuenta cuentaDestino = new Cuenta("Rachul", new BigDecimal("1000"));
