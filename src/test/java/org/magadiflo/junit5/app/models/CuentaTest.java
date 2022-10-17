@@ -18,6 +18,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CuentaTest {
 
+    /**
+     * Cuando usamos expresiones lambda para mostrar el mensaje de error de los assertions,
+     * esta solo se va a ejecutar solo si el assertion falla. Mientras que, si se
+     * coloca el mensaje de forma literal, siempre se creará una instancia del string del
+     * mensaje, haciéndolo ineficiente.
+     * Si la prueba pasa, usando las expresiones lambda, el mensaje nunca se van
+     * a instanciar, y la razón es porque con las expresiones lambda estamos pasando
+     * una invocación futura de un método, no se va a crear el String de forma inmediata,
+     * solo si el assertion falla
+     */
+
     @Test
     void testNombreCuenta() {
         Cuenta cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
@@ -25,9 +36,9 @@ class CuentaTest {
         String esperado = "Martín";
         String real = cuenta.getPersona();
 
-        assertNotNull(real);
-        assertEquals(esperado, real);
-        assertTrue(real.equals("Martín"));
+        assertNotNull(real, () -> "La cuenta no puede ser nula");
+        assertEquals(esperado, real, () -> String.format("El nombre de la cuenta no es el que se esperaba. Se esperaba %s pero se obtuvo %s", esperado, real));
+        assertTrue(real.equals("Martín"), () -> "Nombre cuenta esperada debe ser igual a la real");
     }
 
     @Test
@@ -115,7 +126,7 @@ class CuentaTest {
         banco.transferir(cuentaOrigen, cuentaDestino, new BigDecimal("500"));
 
         assertAll(
-                () -> assertEquals("2000", cuentaOrigen.getSaldo().toPlainString()),
+                () -> assertEquals("2000", cuentaOrigen.getSaldo().toPlainString(), () -> "El valor del saldo de la cuentaOrigen no es el esperado"),
                 () -> assertEquals("1500", cuentaDestino.getSaldo().toPlainString()),
                 () -> assertEquals(2, banco.getCuentas().size()),
                 () -> assertEquals("Banco de la Nación", cuentaOrigen.getBanco().getNombre()),
