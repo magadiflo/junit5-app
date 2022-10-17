@@ -1,5 +1,7 @@
 package org.magadiflo.junit5.app.models;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.magadiflo.junit5.app.exceptions.DineroInsuficienteException;
 
@@ -30,6 +32,7 @@ class CuentaTest {
      */
 
     @Test
+    @DisplayName(value = "Probando nombre de la cuenta corriente!")
     void testNombreCuenta() {
         Cuenta cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
 
@@ -42,6 +45,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName(value = "Probando saldo de la cuenta corriente")
     void testSaldoCuenta() {
         Cuenta cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
 
@@ -52,6 +56,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName(value = "Testeando referencias que sean iguales")
     void testReferenciaCuenta() {
         Cuenta cuentaActual = new Cuenta("Alicia Flores", new BigDecimal("2500.50"));
         Cuenta cuentaEsperada = new Cuenta("Alicia Flores", new BigDecimal("2500.50"));
@@ -113,10 +118,22 @@ class CuentaTest {
      * todos los demás assertions siguientes no serán ejecutados. Por el contrario, si usamos
      * el assertAll, esto permitirá que los demás assertions se ejecuten
      * sin problemas, así falle algún assertion. De esta forma podremos ver qué
-     * assertions pasaron y cuáles fallaron
+     * assertions pasaron y cuáles fallaron.
+     *
+     * @Disabled, esta prueba no se ejecutará, así tenga errores, con disabled nos saltamos
+     * esta prueba y continuamos con las demás
+     * <p>
+     * fail(), forzamos a que falle el método test testRelacionBancoCuentas(),
+     * esto para probar la anotación @Disabled, ya que estamos suponiendo que ese método de prueba
+     * falla testRelacionBancoCuentas() y como quiero probar los demás métodos sin tomar en cuenta
+     * ese que falla, es que quiero saltarme esa prueba para ver la ejecución de las demás
      */
     @Test
+    @Disabled
+    @DisplayName(value = "Probando relaciones entre las cuentas y el banco con assertAll")
     void testRelacionBancoCuentas() {
+        fail();
+
         Cuenta cuentaOrigen = new Cuenta("Alicia", new BigDecimal("2500"));
         Cuenta cuentaDestino = new Cuenta("Rachul", new BigDecimal("1000"));
 
