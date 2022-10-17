@@ -1,6 +1,7 @@
 package org.magadiflo.junit5.app.models;
 
 import org.junit.jupiter.api.Test;
+import org.magadiflo.junit5.app.exceptions.DineroInsuficienteException;
 
 import java.math.BigDecimal;
 
@@ -68,5 +69,17 @@ class CuentaTest {
         assertEquals("1100.00", cuenta.getSaldo().toPlainString());
     }
 
+    @Test
+    void testDineroInsuficienteExceptionCuenta() {
+        Cuenta cuenta = new Cuenta("Alicia", new BigDecimal("1000.00"));
 
+        //Para los manejos de excepciones los haremos con expresiones Lambda (función de flecha)
+        Exception exception = assertThrows(DineroInsuficienteException.class, () -> {
+            cuenta.debito(new BigDecimal("1500"));
+        });
+
+        String mensajeActual = exception.getMessage();
+        String mensajeEsperado = "Dinero Insuficiente";
+        assertEquals(mensajeEsperado, mensajeActual);
+    }
 }
