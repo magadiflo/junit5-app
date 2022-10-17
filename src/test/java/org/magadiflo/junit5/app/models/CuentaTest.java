@@ -24,6 +24,7 @@ class CuentaTest {
         String esperado = "Martín";
         String real = cuenta.getPersona();
 
+        assertNotNull(real);
         assertEquals(esperado, real);
         assertTrue(real.equals("Martín"));
     }
@@ -32,6 +33,7 @@ class CuentaTest {
     void testSaldoCuenta() {
         Cuenta cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
 
+        assertNotNull(cuenta.getSaldo());
         assertEquals(1000.12345d, cuenta.getSaldo().doubleValue());
         assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0); //compareTo: -1, 0, 1
         assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0); //compareTo: -1, 0, 1
@@ -45,4 +47,26 @@ class CuentaTest {
         //Se comparan por valor, ya que agregamos en la clase Cuenta el método equals(...)
         assertEquals(cuentaEsperada, cuentaActual);
     }
+
+    @Test
+    void testDebitoCuenta() { //Débito, restará el monto proporcionado a nuestro saldo
+        Cuenta cuenta = new Cuenta("Gaspar", new BigDecimal("1000.00"));
+        cuenta.debito(new BigDecimal("100"));
+
+        assertNotNull(cuenta.getSaldo());
+        assertEquals(900, cuenta.getSaldo().intValue());
+        assertEquals("900.00", cuenta.getSaldo().toPlainString());
+    }
+
+    @Test
+    void testCreditoCuenta() { //Crédito, sumará el monto proporcionado a nuestro saldo
+        Cuenta cuenta = new Cuenta("Gaspar", new BigDecimal("1000.00"));
+        cuenta.credito(new BigDecimal("100"));
+
+        assertNotNull(cuenta.getSaldo());
+        assertEquals(1100, cuenta.getSaldo().intValue());
+        assertEquals("1100.00", cuenta.getSaldo().toPlainString());
+    }
+
+
 }
