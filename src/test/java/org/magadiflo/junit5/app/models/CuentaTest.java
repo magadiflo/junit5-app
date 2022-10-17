@@ -82,4 +82,32 @@ class CuentaTest {
         String mensajeEsperado = "Dinero Insuficiente";
         assertEquals(mensajeEsperado, mensajeActual);
     }
+
+    @Test
+    void testTransferirDineroCuentas() {
+        Cuenta cuentaOrigen = new Cuenta("Alicia", new BigDecimal("2500"));
+        Cuenta cuentaDestino = new Cuenta("Rachul", new BigDecimal("1000"));
+
+        Banco banco = new Banco();
+        banco.setNombre("Banco de la Nación");
+        banco.transferir(cuentaOrigen, cuentaDestino, new BigDecimal("500"));
+
+        assertEquals("2000", cuentaOrigen.getSaldo().toPlainString());
+        assertEquals("1500", cuentaDestino.getSaldo().toPlainString());
+    }
+
+    @Test
+    void testRelacionBancoCuentas() {
+        Cuenta cuentaOrigen = new Cuenta("Alicia", new BigDecimal("2500"));
+        Cuenta cuentaDestino = new Cuenta("Rachul", new BigDecimal("1000"));
+
+        Banco banco = new Banco();
+        banco.setNombre("Banco de la Nación");
+        banco.addCuenta(cuentaOrigen).addCuenta(cuentaDestino);
+        banco.transferir(cuentaOrigen, cuentaDestino, new BigDecimal("500"));
+
+        assertEquals("2000", cuentaOrigen.getSaldo().toPlainString());
+        assertEquals("1500", cuentaDestino.getSaldo().toPlainString());
+        assertEquals(2, banco.getCuentas().size());
+    }
 }
