@@ -96,6 +96,14 @@ class CuentaTest {
         assertEquals("1500", cuentaDestino.getSaldo().toPlainString());
     }
 
+    /**
+     * Cuando tenemos varios Assertions dentro de un método test, y no manejemos el
+     * assertAll, ocurrirá que cuando ejecutemos el test, y uno de los assertions falle,
+     * todos los demás assertions siguientes no serán ejecutados. Por el contrario, si usamos
+     * el assertAll, esto permitirá que los demás assertions se ejecuten
+     * sin problemas, así falle algún assertion. De esta forma podremos ver qué
+     * assertions pasaron y cuáles fallaron
+     */
     @Test
     void testRelacionBancoCuentas() {
         Cuenta cuentaOrigen = new Cuenta("Alicia", new BigDecimal("2500"));
@@ -106,14 +114,13 @@ class CuentaTest {
         banco.addCuenta(cuentaOrigen).addCuenta(cuentaDestino);
         banco.transferir(cuentaOrigen, cuentaDestino, new BigDecimal("500"));
 
-        assertEquals("2000", cuentaOrigen.getSaldo().toPlainString());
-        assertEquals("1500", cuentaDestino.getSaldo().toPlainString());
-
-        assertEquals(2, banco.getCuentas().size());
-        assertEquals("Banco de la Nación", cuentaOrigen.getBanco().getNombre());
-
-        assertEquals("Alicia", banco.getCuentas().stream().filter(cuenta -> cuenta.getPersona().equals("Alicia")).findFirst().get().getPersona());
-        assertTrue(banco.getCuentas().stream().anyMatch(cuenta -> cuenta.getPersona().equals("Alicia")));
-
+        assertAll(
+                () -> assertEquals("2000", cuentaOrigen.getSaldo().toPlainString()),
+                () -> assertEquals("1500", cuentaDestino.getSaldo().toPlainString()),
+                () -> assertEquals(2, banco.getCuentas().size()),
+                () -> assertEquals("Banco de la Nación", cuentaOrigen.getBanco().getNombre()),
+                () -> assertEquals("Alicia", banco.getCuentas().stream().filter(cuenta -> cuenta.getPersona().equals("Alicia")).findFirst().get().getPersona()),
+                () -> assertTrue(banco.getCuentas().stream().anyMatch(cuenta -> cuenta.getPersona().equals("Alicia")))
+        );
     }
 }
