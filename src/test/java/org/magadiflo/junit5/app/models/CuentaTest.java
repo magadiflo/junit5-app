@@ -36,4 +36,13 @@ class CuentaTest {
         assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0); //compareTo: -1, 0, 1
         assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0); //compareTo: -1, 0, 1
     }
+
+    @Test
+    void testReferenciaCuenta() {
+        Cuenta cuentaActual = new Cuenta("Alicia Flores", new BigDecimal("2500.50"));
+        Cuenta cuentaEsperada = new Cuenta("Alicia Flores", new BigDecimal("2500.50"));
+
+        //Se comparan por valor, ya que agregamos en la clase Cuenta el método equals(...)
+        assertEquals(cuentaEsperada, cuentaActual);
+    }
 }
