@@ -31,6 +31,18 @@ class CuentaTest {
         System.out.println("Finalizando método de prueba");
     }
 
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("Inicializando el test de Cuenta");
+        System.out.println("-------------------------------");
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println("-------------------------------");
+        System.out.println("Finalizando el test de Cuenta");
+    }
+
     /**
      * Cuando usamos expresiones lambda para mostrar el mensaje de error de los assertions,
      * esta solo se va a ejecutar solo si el assertion falla. Mientras que, si se
