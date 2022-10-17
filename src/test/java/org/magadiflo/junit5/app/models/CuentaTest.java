@@ -108,6 +108,12 @@ class CuentaTest {
 
         assertEquals("2000", cuentaOrigen.getSaldo().toPlainString());
         assertEquals("1500", cuentaDestino.getSaldo().toPlainString());
+
         assertEquals(2, banco.getCuentas().size());
+        assertEquals("Banco de la Nación", cuentaOrigen.getBanco().getNombre());
+
+        assertEquals("Alicia", banco.getCuentas().stream().filter(cuenta -> cuenta.getPersona().equals("Alicia")).findFirst().get().getPersona());
+        assertTrue(banco.getCuentas().stream().anyMatch(cuenta -> cuenta.getPersona().equals("Alicia")));
+
     }
 }

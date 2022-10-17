@@ -32,6 +32,7 @@ public class Banco {
 
     public Banco addCuenta(Cuenta cuenta) {
         this.cuentas.add(cuenta);
+        cuenta.setBanco(this);
         return this;
     }
 
