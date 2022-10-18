@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
 
 /***
  * Si observamos, tanto la clase como el método tienen
@@ -272,5 +273,38 @@ class CuentaTest {
     @Test
     @DisabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "prod")
     void testEnvProdDisabled() {
+    }
+
+    /***
+     * Assumptions, es para evaluar una expresión true o false de forma programática.
+     * assumeTrue(...), asumimos que el valor contenido será un true, si se cumple continuamos, si no se cumple no se ejecuta la prueba
+     */
+    @Test
+    void testSaldoCuentaDev() {
+        boolean esDev = "dev".equals(System.getProperty("ENV"));
+        // esDev, dentro del assumeTrue(...), Si esto devuelve true, se ejecutan las líneas siguientes (assertNotNull....),
+        // caso contrario no se ejecutarán
+        assumeTrue(esDev);
+
+        assertNotNull(this.cuenta.getSaldo());
+        assertEquals(1000.12345d, this.cuenta.getSaldo().doubleValue());
+        assertFalse(this.cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0); //compareTo: -1, 0, 1
+        assertTrue(this.cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0); //compareTo: -1, 0, 1
+    }
+
+    @Test
+    void testSaldoCuentaDev2() {
+        boolean esDev = "dev".equals(System.getProperty("ENV"));
+
+        //Nuestro ambiente de desarrollo está en dev, por lo tanto este sí se ejecutará
+        assumingThat(esDev, () -> {
+            assertNotNull(this.cuenta.getSaldo());
+            assertEquals(1000.12345d, this.cuenta.getSaldo().doubleValue());
+        });
+
+        //Estas pruebas sí se ejecutarán
+        assertFalse(this.cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0); //compareTo: -1, 0, 1
+        assertTrue(this.cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0); //compareTo: -1, 0, 1
+
     }
 }
