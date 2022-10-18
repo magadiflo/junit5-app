@@ -52,3 +52,16 @@ puede que se ejecute primero el método A y luego el método B, o en otro caso
 primero el método B y luego el método A, eso depende del motor de pruebas de 
 JUnit, y eso está bien, ya que al ser pruebas unitarias se, nos centramos únicamente
 en probar el método, y este no debería tener relación con otros métodos
+
+## Creando variable de 
+En el apartado de ejecución del proyecto, clickeamos en el select y
+seleccioamos: **Edit configurations...**
+
+Se abrirá una ventana, en el lado izquierdo seleccinoamos **CuentaTest** y 
+en la parte derecha, sección **Build an run** observaremos una propiedad
+colocada -ea, solo le agrgaremos lo siguiente **-DENV=dev,**
+finalmente querdaría: **-ea -DENV=dev**, de esa manera hemos agregado 
+nuestra propiedad ENV y su valor dev. 
+
+NOTA: -D, significa que vamos a configurar una propiedad del sistema
+(System property)

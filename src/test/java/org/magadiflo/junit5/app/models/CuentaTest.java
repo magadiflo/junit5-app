@@ -1,9 +1,11 @@
 package org.magadiflo.junit5.app.models;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 import org.magadiflo.junit5.app.exceptions.DineroInsuficienteException;
 
 import java.math.BigDecimal;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,13 +22,15 @@ class CuentaTest {
 
     Cuenta cuenta;
 
-    @BeforeEach //Que se ejecute antes de iniciar cada método test
+    @BeforeEach
+        //Que se ejecute antes de iniciar cada método test
     void initMetodoTest() {
         this.cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
         System.out.println("Iniciando el método!");
     }
 
-    @AfterEach //Que se ejecute después que finalice la ejecución de cada método test
+    @AfterEach
+        //Que se ejecute después que finalice la ejecución de cada método test
     void tearDown() {
         System.out.println("Finalizando método de prueba");
     }
@@ -173,5 +177,72 @@ class CuentaTest {
                 () -> assertEquals("Alicia", banco.getCuentas().stream().filter(cuenta -> cuenta.getPersona().equals("Alicia")).findFirst().get().getPersona()),
                 () -> assertTrue(banco.getCuentas().stream().anyMatch(cuenta -> cuenta.getPersona().equals("Alicia")))
         );
+    }
+
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    void testSoloWindows() {
+
+    }
+
+    @Test
+    @EnabledOnOs({OS.LINUX, OS.MAC})
+    void testSoloLinuxMac() {
+
+    }
+
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void testNoWindows() {
+
+    }
+
+    @Test
+    @EnabledOnJre(JRE.JAVA_8)
+    void testSoloEnJDK8() {
+    }
+
+    @Test
+    @EnabledOnJre(JRE.JAVA_17)
+    void testSoloJDK17() {
+    }
+
+    @Test
+    @DisabledOnJre(JRE.JAVA_17)
+    void testNoJDK17() {
+    }
+
+    @Test
+    void testImprimirSystemProperties() {
+        Properties properties = System.getProperties();
+        properties.forEach((key, value) -> System.out.printf("%s : %s %n", key, value));
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "java.version", matches = "17.*")
+        //matches, se puede usar expresiones regulares o sin expresiones regulares
+    void testJavaVersion() {
+
+    }
+
+    @Test
+    @DisabledIfSystemProperty(named = "os.arch", matches = ".*32.*")
+    void testSolo64Bits() {
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "os.arch", matches = ".*32.*")
+    void testNo64Bits() {
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "user.name", matches = "USUARIO")
+    void testUsernameOS() {
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "ENV", matches = "dev")
+    void testDev() {
+
     }
 }
