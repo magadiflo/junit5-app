@@ -53,7 +53,7 @@ primero el método B y luego el método A, eso depende del motor de pruebas de
 JUnit, y eso está bien, ya que al ser pruebas unitarias se, nos centramos únicamente
 en probar el método, y este no debería tener relación con otros métodos
 
-## Creando variable de 
+## Creando variable del sistema 
 En el apartado de ejecución del proyecto, clickeamos en el select y
 seleccioamos: **Edit configurations...**
 
@@ -65,3 +65,8 @@ nuestra propiedad ENV y su valor dev.
 
 NOTA: -D, significa que vamos a configurar una propiedad del sistema
 (System property)
+
+## Creando variable de entorno
+Similar a la creación de la variable del sistema, pero esta vez la variable
+se creará en el apartado de **Environment variables**  
+ENVIRONMENT=dev

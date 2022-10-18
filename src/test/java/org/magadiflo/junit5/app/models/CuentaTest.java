@@ -5,6 +5,7 @@ import org.junit.jupiter.api.condition.*;
 import org.magadiflo.junit5.app.exceptions.DineroInsuficienteException;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -244,5 +245,32 @@ class CuentaTest {
     @EnabledIfSystemProperty(named = "ENV", matches = "dev")
     void testDev() {
 
+    }
+
+    @Test
+    void testImprimirVariablesAmbiente() {
+        Map<String, String> getEnvironment = System.getenv();
+        getEnvironment.forEach((key, value) -> System.out.printf("%s = %s %n", key, value));
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "JAVA_HOME", matches = ".*jdk-17.0.4.1.*")
+    void testJavaHome() {
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "NUMBER_OF_PROCESSORS", matches = "8")
+    void testProcesadores() {
+
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "dev")
+    void testEnv() {
+    }
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "prod")
+    void testEnvProdDisabled() {
     }
 }
