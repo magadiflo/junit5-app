@@ -2,6 +2,8 @@ package org.magadiflo.junit5.app.models;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.magadiflo.junit5.app.exceptions.DineroInsuficienteException;
 
 import java.math.BigDecimal;
@@ -333,7 +335,7 @@ class CuentaTest {
     // las 5 repeticiones de esta prueba. Esto lo podríamos usar, por ejemplo, cuando hayan datos aleatorios
     @RepeatedTest(value = 5, name = "{displayName}: Repetición número {currentRepetition} de {totalRepetitions}")
     @DisplayName(value = "Probando debito cuenta repetir")
-    void testDebitoCuentaRepetir(RepetitionInfo info) { //Con esos parámetros se obtienen la repetición actual y el total de repeticiones
+    void testDebitoCuentaRepetir(RepetitionInfo info) { //El framework aplica DI en esos parámetros (Se obtienen la repetición actual y el total de repeticiones)
         if (info.getCurrentRepetition() == 3) {
             System.out.println("Estamos en la repetición " + info.getCurrentRepetition());
         }
@@ -344,5 +346,15 @@ class CuentaTest {
         assertNotNull(cuenta.getSaldo());
         assertEquals(900, cuenta.getSaldo().intValue());
         assertEquals("900.00", cuenta.getSaldo().toPlainString());
+    }
+
+    @ParameterizedTest(name = "número {index} ejecutando con valor {argumentsWithNames}")
+    @ValueSource(strings = {"100", "200", "300", "500", "700", "1000"})
+    void testDebitoCuentaParametrizado(String monto) {
+        this.cuenta = new Cuenta("Gaspar", new BigDecimal("1000.50"));
+        this.cuenta.debito(new BigDecimal(monto));
+
+        assertNotNull(cuenta.getSaldo());
+        assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
     }
 }
