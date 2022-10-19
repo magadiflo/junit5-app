@@ -1,0 +1,28 @@
+-------------------------------------------------------------------------------
+Test set: org.magadiflo.junit5.app.models.CuentaTest
+-------------------------------------------------------------------------------
+Tests run: 66, Failures: 6, Errors: 0, Skipped: 7, Time elapsed: 8.611 s <<< FAILURE! - in org.magadiflo.junit5.app.models.CuentaTest
+testDebitoCuentaParametrizadoCsvFileSource2{String, String, String, String}[1]  Time elapsed: 0.015 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Alicia> but was: <Alicha>
+	at org.magadiflo.junit5.app.models.CuentaTest$PruebasParametrizadasTest.testDebitoCuentaParametrizadoCsvFileSource2(CuentaTest.java:434)
+
+testDebitoCuentaParametrizadoCsvFileSource2{String, String, String, String}[4]  Time elapsed: 0.002 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Carlos> but was: <Karlos>
+	at org.magadiflo.junit5.app.models.CuentaTest$PruebasParametrizadasTest.testDebitoCuentaParametrizadoCsvFileSource2(CuentaTest.java:434)
+
+testDebitoCuentaParametrizadoCsvFileSource2{String, String, String, String}[5]  Time elapsed: 0.002 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Luca> but was: <Lucas>
+	at org.magadiflo.junit5.app.models.CuentaTest$PruebasParametrizadasTest.testDebitoCuentaParametrizadoCsvFileSource2(CuentaTest.java:434)
+
+testDebitoCuentaParametrizadoCsvSource2{String, String, String, String}[1]  Time elapsed: 0.002 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Alicia> but was: <Alicha>
+	at org.magadiflo.junit5.app.models.CuentaTest$PruebasParametrizadasTest.testDebitoCuentaParametrizadoCsvSource2(CuentaTest.java:411)
+
+testDebitoCuentaParametrizadoCsvSource2{String, String, String, String}[4]  Time elapsed: 0.003 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Carlos> but was: <Karlos>
+	at org.magadiflo.junit5.app.models.CuentaTest$PruebasParametrizadasTest.testDebitoCuentaParametrizadoCsvSource2(CuentaTest.java:411)
+
+testDebitoCuentaParametrizadoCsvSource2{String, String, String, String}[5]  Time elapsed: 0.003 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Luca> but was: <Lucas>
+	at org.magadiflo.junit5.app.models.CuentaTest$PruebasParametrizadasTest.testDebitoCuentaParametrizadoCsvSource2(CuentaTest.java:411)
+
