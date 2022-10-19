@@ -10,10 +10,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.magadiflo.junit5.app.exceptions.DineroInsuficienteException;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.*;
@@ -447,4 +449,29 @@ class CuentaTest {
             return Arrays.asList("100", "200", "300", "500", "700", "1000");
         }
     }
+
+    @Nested
+    @Tag(value = "timeout")
+    class EjemploTimeOutTest {
+        @Test
+        @Timeout(value = 5)
+            //Esperará como máximo 5 segundos, sino lanza el timeOut
+        void pruebaTimeOut() throws InterruptedException {
+            TimeUnit.SECONDS.sleep(4); //Simulamos demora de 4 segundos
+        }
+
+        @Test
+        @Timeout(value = 500, unit = TimeUnit.MILLISECONDS)
+        void pruebaTimeOut2() throws InterruptedException {
+            TimeUnit.MILLISECONDS.sleep(300);
+        }
+
+        @Test
+        void testTimeoutAssertions() {
+            assertTimeout(Duration.ofSeconds(5), () -> {
+                TimeUnit.SECONDS.sleep(4);
+            });
+        }
+    }
+
 }
