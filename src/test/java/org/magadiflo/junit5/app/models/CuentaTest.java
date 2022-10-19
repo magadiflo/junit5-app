@@ -59,6 +59,7 @@ class CuentaTest {
     //Clase anidada, solo la implementamos cuando queremos organizar nuestras pruebas
     //Con @Nested, indicamos que estamos organizando las pruebas en esta clase.
     //Si un método dentro de la clase falla, falla toda la clase completa
+    @Tag(value = "cuenta")
     @Nested
     @DisplayName(value = "Probando atributos de la cuenta corriente")
     class CuentaTestNombreSaldo {
@@ -110,6 +111,8 @@ class CuentaTest {
 
     @Nested
     class CuentaOperaciones {
+
+        @Tag(value = "cuenta")
         @Test
         void testDebitoCuenta() { //Débito, restará el monto proporcionado a nuestro saldo
             cuenta = new Cuenta("Gaspar", new BigDecimal("1000.00"));
@@ -120,6 +123,7 @@ class CuentaTest {
             assertEquals("900.00", cuenta.getSaldo().toPlainString());
         }
 
+        @Tag(value = "cuenta")
         @Test
         void testCreditoCuenta() { //Crédito, sumará el monto proporcionado a nuestro saldo
             cuenta = new Cuenta("Gaspar", new BigDecimal("1000.00"));
@@ -130,6 +134,9 @@ class CuentaTest {
             assertEquals("1100.00", cuenta.getSaldo().toPlainString());
         }
 
+        //Se puede tener más de una etiqueta
+        @Tag(value = "cuenta")
+        @Tag(value = "banco")
         @Test
         void testTransferirDineroCuentas() {
             Cuenta cuentaOrigen = new Cuenta("Alicia", new BigDecimal("2500"));
@@ -144,6 +151,8 @@ class CuentaTest {
         }
     }
 
+    @Tag(value = "cuenta")
+    @Tag(value = "error")
     @Test
     void testDineroInsuficienteExceptionCuenta() {
         this.cuenta = new Cuenta("Alicia", new BigDecimal("1000.00"));
@@ -174,6 +183,8 @@ class CuentaTest {
      * falla testRelacionBancoCuentas() y como quiero probar los demás métodos sin tomar en cuenta
      * ese que falla, es que quiero saltarme esa prueba para ver la ejecución de las demás
      */
+    @Tag(value = "cuenta")
+    @Tag(value = "banco")
     @Test
     //@Disabled
     @DisplayName(value = "Probando relaciones entre las cuentas y el banco con assertAll")
@@ -353,6 +364,13 @@ class CuentaTest {
         assertEquals("900.00", cuenta.getSaldo().toPlainString());
     }
 
+    /***
+     * @Tag, Permite categorizar las pruebas. Lo podemos agregar en los métodos test o en
+     * las clases anidadas @Nested (así se aplica a todos los métodos dentro de la clase anidada).
+     * Estas etiquetas permiten ejecutar pruebas de forma selectiva, ejemplo, queremos ejecutar ciertas pruebas
+     * que tengan la etiqueta "integration", o "saldo"
+     */
+    @Tag(value = "param")
     @Nested
     class PruebasParametrizadasTest {
 

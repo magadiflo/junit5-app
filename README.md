@@ -70,3 +70,11 @@ NOTA: -D, significa que vamos a configurar una propiedad del sistema
 Similar a la creación de la variable del sistema, pero esta vez la variable
 se creará en el apartado de **Environment variables**  
 ENVIRONMENT=dev
+
+## Ejecutar una etiqueta en particular
+
+- Menú desplegable Select Run/Debug configuration
+- Edit Configurations...
+- En la sección de **Build and run**
+- Por defecto está seleccionado Class, nosotros seleccionaremos Tags
+- En el campo agregar las etiquetas a ejecutar, ejemplo: param
