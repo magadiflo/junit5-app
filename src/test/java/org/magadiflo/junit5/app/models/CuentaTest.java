@@ -31,11 +31,12 @@ class CuentaTest {
 
     Cuenta cuenta;
 
+    //Que se ejecute antes de iniciar cada método test
     @BeforeEach
-        //Que se ejecute antes de iniciar cada método test
-    void initMetodoTest() {
+    void initMetodoTest(TestInfo testInfo, TestReporter testReporter) { //Automáticamente en estos parámetros se aplica inyección de dependencia
         this.cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
         System.out.println("Iniciando el método!");
+        System.out.printf("Ejecutando: %s %s con las etiquetas %s %n", testInfo.getDisplayName(), testInfo.getTestMethod().get().getName(), testInfo.getTags());
     }
 
     @AfterEach
