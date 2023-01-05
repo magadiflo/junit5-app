@@ -33,7 +33,32 @@ class CuentaTest {
 
     Cuenta cuenta;
 
-    //Que se ejecute antes de iniciar cada método test
+    /**
+     * Ciclo de vida de las pruebas
+     * ****************************
+     * @BeforeEach, que se ejecute antes de iniciar cada método test. Es un método de instancia, no es estática.
+     * @AfterEach, que se ejecute después de finalizar cada método test. Es un método de instancia, no es estática.
+     * @BeforeAll, que se ejecute antes de todos los métodos test. Es estática porque le pertenece a la clase que será común para todas las instancias.
+     * @AfterAll, que se ejecute después de finalizar todos los métodos test. Es estática porque le pertenece a la clase y será común a todas las instancias.
+     *
+     *
+     * TestInfo y TestReporter
+     * ************************
+     * TestInfo, contiene toda la información de la prueba unitaria del método test,
+     *      por ejemplo: nombre del método, clase a la que pertenece, contenido del display name,
+     *      y sus tags.
+     *
+     * TestReporter, un componente de JUnit que nos permite registrar en el log alguna
+     *      información que querríamos anexar en la salida, como un timestamp, una fecha, etc..
+     *      algo más elaborado que un simple System.out.println.
+     *
+     * Estas dos interfaces son parte de la Inyección de Dependencia de JUnit, las que
+     * pueden ser utilizadas en cualquier método test o también en el @BeforeEach o el @AfterEach.
+     *
+     * En este caso estamos aplicándolo en el @BeforeEach, en los parámetros del método automáticamente
+     * JUnit aplicará la Inyección de Dependencia.
+     */
+
     @BeforeEach
     void initMetodoTest(TestInfo testInfo, TestReporter testReporter) { //Automáticamente en estos parámetros se aplica inyección de dependencia
         this.cuenta = new Cuenta("Martín", new BigDecimal("1000.12345"));
@@ -42,7 +67,6 @@ class CuentaTest {
     }
 
     @AfterEach
-        //Que se ejecute después que finalice la ejecución de cada método test
     void tearDown() {
         System.out.println("Finalizando método de prueba");
     }
@@ -59,14 +83,25 @@ class CuentaTest {
         System.out.println("Finalizando el test de Cuenta");
     }
 
-    //Clase anidada, solo la implementamos cuando queremos organizar nuestras pruebas
-    //Con @Nested, indicamos que estamos organizando las pruebas en esta clase.
-    //Si un método dentro de la clase falla, falla toda la clase completa
+    /**
+     * @Nested
+     * ********
+     * Con @Nested organizamos las pruebas dentro de una clase anidada.
+     *
+     * Se puede colocar un @BeforeEach y un @AfterEach dentro de cada clase anidada,
+     * pero no el @BeforeAll ni el @AfterAll. Estos últimos solo son para
+     * la clase principal.
+     *
+     * Si dentro de una clase anidada falla uno de los métodos, falla
+     * toda la clase anidada completa, aunque los otros métodos hayan pasado.
+     */
     @Tag(value = "cuenta")
     @Nested
     @DisplayName(value = "Probando atributos de la cuenta corriente")
     class CuentaTestNombreSaldo {
         /**
+         * Supplier<String>: () -> "Algún mensaje que describa la falla"
+         * ************************************************************
          * Cuando usamos expresiones lambda para mostrar el mensaje de error de los assertions,
          * esta solo se va a ejecutar solo si el assertion falla. Mientras que, si se
          * coloca el mensaje de forma literal, siempre se creará una instancia del string del
@@ -171,6 +206,8 @@ class CuentaTest {
     }
 
     /**
+     * assertAll(...)
+     * ****************
      * Cuando tenemos varios Assertions dentro de un método test, y no manejemos el
      * assertAll, ocurrirá que cuando ejecutemos el test, y uno de los assertions falle,
      * todos los demás assertions siguientes no serán ejecutados. Por el contrario, si usamos
@@ -178,9 +215,13 @@ class CuentaTest {
      * sin problemas, así falle algún assertion. De esta forma podremos ver qué
      * assertions pasaron y cuáles fallaron.
      *
-     * @Disabled, esta prueba no se ejecutará, así tenga errores, con disabled nos saltamos
+     * @Disabled
+     * ************
+     * Esta prueba no se ejecutará, así tenga errores, con disabled nos saltamos
      * esta prueba y continuamos con las demás
-     * <p>
+     *
+     * fail()
+     * *******
      * fail(), forzamos a que falle el método test testRelacionBancoCuentas(),
      * esto para probar la anotación @Disabled, ya que estamos suponiendo que ese método de prueba
      * falla testRelacionBancoCuentas() y como quiero probar los demás métodos sin tomar en cuenta
@@ -281,6 +322,19 @@ class CuentaTest {
         void testUsernameOS() {
         }
 
+        /**
+         * Propiedad del sistema: dev
+         * **************************
+         * Para probar que este test solo se ejecute si tiene como propiedad del sistema = ENV,
+         * y como valor = dev, debemos configurarle dicha propiedad.
+         * Para ello vamos, en la parte superior de IDE IntelliJ IDEA, vamos a Edit Configurations...
+         * y seleccionamos CuentaTest y en la sección Build and run en el input que está el -ea,
+         * le damos un espacio y escribimos: -DENV=dev, finalmente debería quedar así ese input:
+         * -ea -DENV=dev
+         * Donde:
+         * -ea, viene por defecto y le indica que ejecute esta clase habilitando los assertions
+         * -D, significa que configuraremos un System property
+         */
         @Test
         @EnabledIfSystemProperty(named = "ENV", matches = "dev")
         void testDev() {
@@ -306,6 +360,19 @@ class CuentaTest {
 
         }
 
+        /**
+         * Variable de entorno: dev
+         * *************************
+         * Para probar que este test solo se ejecute en entorno dev, debemos
+         * configurarle un entorno de ambiente. Para ello vamos, en la parte superior de
+         * IDE IntelliJ IDEA, vamos a Edit Configurations... y seleccionamos CuentaTest y
+         * en la sección environment variables colocar directamente:
+         * ENVIRONMENT=dev
+         *
+         * NOTA: Es similar al de propiedades del sistema que configuramos en la parte superior, en
+         * el de @EnabledIfSystemProperty(named = "ENV", matches = "dev"), pero en este caso
+         * sería configurando una variable de entorno
+         */
         @Test
         @EnabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "dev")
         void testEnv() {
@@ -318,13 +385,17 @@ class CuentaTest {
     }
 
     /***
-     * Assumptions, es para evaluar una expresión true o false de forma programática.
-     * assumeTrue(...), asumimos que el valor contenido será un true, si se cumple continuamos, si no se cumple no se ejecuta la prueba
+     * Assumptions
+     * ************
+     * Es para evaluar una expresión true o false de forma programática.
+     * assumeTrue(...), asumimos que el valor contenido será un true, si se cumple continuamos,
+     * si no se cumple no se ejecuta la prueba.
      */
     @Test
     void testSaldoCuentaDev() {
         boolean esDev = "dev".equals(System.getProperty("ENV"));
-        // esDev, dentro del assumeTrue(...), Si esto devuelve true, se ejecutan las líneas siguientes (assertNotNull....),
+        // esDev, dentro del assumeTrue(...), Si esto devuelve true,
+        // se ejecutan las líneas siguientes (assertNotNull....),
         // caso contrario no se ejecutarán
         assumeTrue(esDev);
 
@@ -350,8 +421,15 @@ class CuentaTest {
 
     }
 
-    //Indicamos que repetiremos 5 veces la prueba, esto provocará que en los resultados se muestren
-    // las 5 repeticiones de esta prueba. Esto lo podríamos usar, por ejemplo, cuando hayan datos aleatorios
+    /**
+     * @RepeatedTest
+     * *************
+     * - Nos permite repetir un test las veces que le indiquemos.
+     * - Reemplaza la anotación @Test por @RepeatedTest.
+     * - Los resultados del test se mostrarán por cada repetición.
+     * - Este tipo de prueba lo podríamos usar, por ejemplo, cuando
+     *   quisiéramos probar datos aleatorios según nuestro caso de uso.
+     */
     @RepeatedTest(value = 5, name = "{displayName}: Repetición número {currentRepetition} de {totalRepetitions}")
     @DisplayName(value = "Probando debito cuenta repetir")
     void testDebitoCuentaRepetir(RepetitionInfo info) { //El framework aplica DI en esos parámetros (Se obtienen la repetición actual y el total de repeticiones)
@@ -368,18 +446,46 @@ class CuentaTest {
     }
 
     /***
-     * @Tag, Permite categorizar las pruebas. Lo podemos agregar en los métodos test o en
-     * las clases anidadas @Nested (así se aplica a todos los métodos dentro de la clase anidada).
-     * Estas etiquetas permiten ejecutar pruebas de forma selectiva, ejemplo, queremos ejecutar ciertas pruebas
-     * que tengan la etiqueta "integration", o "saldo"
+     * @Tag(...)
+     * **********
+     * Permite categorizar las pruebas.
+     *
+     * Lo podemos agregar en los métodos test o en las clases anidadas @Nested
+     * así se aplica a todos los métodos dentro de la clase anidada.
+     *
+     * Estas etiquetas permiten ejecutar pruebas de forma selectiva, por ejemplo,
+     * no queremos ejecutar todas las pruebas, sino solo aquellas que tengan
+     * la etiqueta "integration", o "saldo".
+     *
+     * ¿Como ejecutar?
+     * ***************
+     * Para ejecutar las pruebas según el @Tag, debemos ir en la parte superior
+     * seleccionar Edit Configurations..., seleccionar CuentaTest y veremos que por
+     * defecto en la sección Build and run el select está en Class, debemos
+     * cambiarlo por Tags y en el input escribimos el tag que queremos ejecutar
      */
     @Tag(value = "param")
     @Nested
     class PruebasParametrizadasTest {
 
+        /**
+         * @ParameterizedTest(...)
+         * ***********************
+         * Es similar al @RepeatedTest, es decir nos permitirá repetir la prueba,
+         * pero con @ParameterizedTest le pasamos datos de entrada distintos para
+         * cada prueba. Es decir, son datos que le vamos a proveer para realizar la
+         * prueba y cada repetición tendrá un comportamiento distinto de acuerdo a
+         * cada dato de prueba proporcionado.
+         *
+         * Tal como se hizo con el @RepeatedTest que reemplaza a @Test, aquí
+         * ocurre lo mismo, @ParameterizedTest reemplaza a @Test.
+         *
+         * El @ParameterizedTest va acompañado de otra anotación que será de donde
+         * se obtengan los datos, ejemplo: @ValueSource, @CsvSource, @CsvFileSource, etc...
+         */
         @ParameterizedTest(name = "número {index} ejecutando con valor {argumentsWithNames}")
         @ValueSource(strings = {"100", "200", "300", "500", "700", "1000"})
-        void testDebitoCuentaParametrizadoValueSource(String monto) {
+        void testDebitoCuentaParametrizadoValueSource(String monto) { // Por cada valor del @ValueSource se irá inyectando a este argumento monto. Podría ser un double o el tipo que necesitemos.
             cuenta = new Cuenta("Gaspar", new BigDecimal("1000.50"));
             cuenta.debito(new BigDecimal(monto));
 
@@ -388,7 +494,7 @@ class CuentaTest {
         }
 
         @ParameterizedTest(name = "número {index} ejecutando con valor {argumentsWithNames}")
-        @CsvSource({"1,100", "2,200", "3,300", "4,500", "5,700", "6,1000"})
+        @CsvSource({"1,100", "2,200", "3,300", "4,500", "5,700", "6,1000"}) //"indice,valor"
         void testDebitoCuentaParametrizadoCsvSource(String index, String monto) {
             System.out.printf("%s -> %s %n", index, monto);
             cuenta = new Cuenta("Gaspar", new BigDecimal("1000.50"));
@@ -413,7 +519,7 @@ class CuentaTest {
         }
 
         @ParameterizedTest(name = "número {index} ejecutando con valor {argumentsWithNames}")
-        @CsvFileSource(resources = "/data.csv")
+        @CsvFileSource(resources = "/data.csv") // Ubicado en: src/main/java/resources/
         void testDebitoCuentaParametrizadoCsvFileSource(String monto) {
             cuenta = new Cuenta("Gaspar", new BigDecimal("1000.50"));
             cuenta.debito(new BigDecimal(monto));
@@ -450,12 +556,16 @@ class CuentaTest {
         }
     }
 
+    /**
+     * @Timeout(...)
+     * *************
+     * Nos permite arrojar un error si el test se pasa de cierta cantidad de tiempo.
+     */
     @Nested
     @Tag(value = "timeout")
     class EjemploTimeOutTest {
         @Test
-        @Timeout(value = 5)
-            //Esperará como máximo 5 segundos, sino lanza el timeOut
+        @Timeout(value = 5)  //Esperará como máximo 5 segundos, sino lanza el timeOut
         void pruebaTimeOut() throws InterruptedException {
             TimeUnit.SECONDS.sleep(4); //Simulamos demora de 4 segundos
         }
